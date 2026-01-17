@@ -1,52 +1,122 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Award, Briefcase, FileText, Mail, Phone, MapPin, Star, CheckCircle2, ArrowRight } from "lucide-react";
+import { Award, Briefcase, FileText, Mail, Phone, MapPin, Star, CheckCircle2, ArrowRight, Menu, X, ChevronDown } from "lucide-react";
+import { useState, useEffect } from "react";
 
 export default function Home() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [expandedFAQ, setExpandedFAQ] = useState<number | null>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <div className="min-h-screen bg-white">
       {/* ナビゲーション */}
-      <nav className="sticky top-0 z-50 backdrop-blur-md bg-white/95 border-b border-slate-200">
+      <nav className={`fixed top-0 z-50 w-full transition-all duration-300 ${isScrolled ? "backdrop-blur-md bg-white/95 shadow-lg border-b border-slate-200" : "bg-transparent"}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <div className="text-2xl font-bold text-blue-900">
             吉田のポートフォリオ
           </div>
+          
+          {/* デスクトップメニュー */}
           <div className="hidden md:flex gap-8">
             <a href="#profile" className="text-slate-700 hover:text-blue-900 transition font-medium">プロフィール</a>
             <a href="#qualifications" className="text-slate-700 hover:text-blue-900 transition font-medium">資格・経験</a>
             <a href="#services" className="text-slate-700 hover:text-blue-900 transition font-medium">サービス</a>
             <a href="#portfolio" className="text-slate-700 hover:text-blue-900 transition font-medium">実績</a>
+            <a href="#faq" className="text-slate-700 hover:text-blue-900 transition font-medium">FAQ</a>
             <a href="#contact" className="text-slate-700 hover:text-blue-900 transition font-medium">お問い合わせ</a>
           </div>
+
+          {/* モバイルメニューボタン */}
+          <button className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+            {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
         </div>
+
+        {/* モバイルメニュー */}
+        {isMenuOpen && (
+          <div className="md:hidden bg-white border-b border-slate-200 py-4 px-4 space-y-2">
+            <a href="#profile" className="block py-2 text-slate-700 hover:text-blue-900">プロフィール</a>
+            <a href="#qualifications" className="block py-2 text-slate-700 hover:text-blue-900">資格・経験</a>
+            <a href="#services" className="block py-2 text-slate-700 hover:text-blue-900">サービス</a>
+            <a href="#portfolio" className="block py-2 text-slate-700 hover:text-blue-900">実績</a>
+            <a href="#faq" className="block py-2 text-slate-700 hover:text-blue-900">FAQ</a>
+            <a href="#contact" className="block py-2 text-slate-700 hover:text-blue-900">お問い合わせ</a>
+          </div>
+        )}
       </nav>
 
-      {/* ヒーロー セクション */}
-      <section className="bg-gradient-to-br from-blue-900 via-blue-800 to-slate-900 text-white py-20 px-4">
-        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-          <div>
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
-              社会保険労務士 × ファイナンシャルプランナー × ライター
-            </h1>
-            <p className="text-xl text-blue-100 mb-8 leading-relaxed">
-              金融機関での実務経験と専門資格を活かし、複雑な社会保障制度や資産運用、人事労務に関する記事執筆から、わかりやすい解説コンテンツまで、幅広い業務に対応いたします。
-            </p>
-            <div className="flex gap-4">
-              <Button className="bg-yellow-500 hover:bg-yellow-600 text-blue-900 font-bold px-8 py-6 text-lg">
-                クラウドワークスで依頼する
-              </Button>
-              <Button variant="outline" className="border-white text-white hover:bg-white/10 px-8 py-6 text-lg">
-                詳細を見る
-              </Button>
+      {/* ヒーロー セクション（改善版） */}
+      <section className="relative pt-20 overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="/images/hero-background.jpg" 
+            alt="Hero Background" 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-900/95 via-blue-800/90 to-transparent"></div>
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div className="animate-fade-in">
+              <div className="mb-4 inline-block">
+                <Badge className="bg-yellow-500 text-blue-900 px-4 py-2 text-sm font-semibold">
+                  複数の専門資格を持つプロフェッショナル
+                </Badge>
+              </div>
+              
+              <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
+                社会保険労務士 × ファイナンシャルプランナー × ライター
+              </h1>
+              
+              <p className="text-xl text-blue-100 mb-8 leading-relaxed">
+                金融機関での実務経験と専門資格を活かし、複雑な社会保障制度や資産運用、人事労務に関する記事執筆から、わかりやすい解説コンテンツまで、幅広い業務に対応いたします。
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Button className="bg-yellow-500 hover:bg-yellow-600 text-blue-900 font-bold px-8 py-6 text-lg shadow-lg hover:shadow-xl transition-all transform hover:scale-105">
+                  クラウドワークスで依頼する
+                  <ArrowRight className="ml-2 w-5 h-5" />
+                </Button>
+                <Button variant="outline" className="border-white text-white hover:bg-white/20 px-8 py-6 text-lg">
+                  詳細を見る
+                </Button>
+              </div>
+
+              {/* 信頼性指標 */}
+              <div className="mt-12 pt-8 border-t border-white/30 flex gap-8">
+                <div>
+                  <p className="text-3xl font-bold text-yellow-400">50+</p>
+                  <p className="text-blue-100">実績件数</p>
+                </div>
+                <div>
+                  <p className="text-3xl font-bold text-yellow-400">4.8/5.0</p>
+                  <p className="text-blue-100">平均評価</p>
+                </div>
+                <div>
+                  <p className="text-3xl font-bold text-yellow-400">5年+</p>
+                  <p className="text-blue-100">金融経験</p>
+                </div>
+              </div>
             </div>
-          </div>
-          <div className="flex justify-center">
-            <img 
-              src="/images/professional-character.png" 
-              alt="プロフェッショナルキャラクター" 
-              className="w-full max-w-md drop-shadow-2xl"
-            />
+
+            <div className="flex justify-center md:justify-end">
+              <img 
+                src="/images/professional-character.png" 
+                alt="プロフェッショナルキャラクター" 
+                className="w-full max-w-md drop-shadow-2xl animate-float"
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -59,7 +129,7 @@ export default function Home() {
             複数の専門資格と金融機関での実務経験を活かし、質の高いコンテンツとコンサルティングを提供します
           </p>
           
-          <div className="bg-white rounded-lg shadow-lg p-8 md:p-12">
+          <div className="bg-white rounded-lg shadow-lg p-8 md:p-12 hover:shadow-xl transition-shadow">
             <div className="grid md:grid-cols-2 gap-12">
               <div>
                 <h3 className="text-2xl font-bold text-blue-900 mb-4">自己紹介</h3>
@@ -71,28 +141,28 @@ export default function Home() {
                 </p>
               </div>
               <div className="space-y-4">
-                <div className="flex items-start gap-4">
+                <div className="flex items-start gap-4 p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition">
                   <MapPin className="w-6 h-6 text-yellow-500 flex-shrink-0 mt-1" />
                   <div>
                     <p className="font-semibold text-slate-900">対応地域</p>
                     <p className="text-slate-600">全国（リモート対応）</p>
                   </div>
                 </div>
-                <div className="flex items-start gap-4">
+                <div className="flex items-start gap-4 p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition">
                   <Briefcase className="w-6 h-6 text-yellow-500 flex-shrink-0 mt-1" />
                   <div>
                     <p className="font-semibold text-slate-900">職業</p>
                     <p className="text-slate-600">フリーランス ライター・コンサルタント</p>
                   </div>
                 </div>
-                <div className="flex items-start gap-4">
+                <div className="flex items-start gap-4 p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition">
                   <FileText className="w-6 h-6 text-yellow-500 flex-shrink-0 mt-1" />
                   <div>
                     <p className="font-semibold text-slate-900">経験年数</p>
                     <p className="text-slate-600">金融機関 5年以上、ライティング 3年以上</p>
                   </div>
                 </div>
-                <div className="flex items-start gap-4">
+                <div className="flex items-start gap-4 p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition">
                   <Phone className="w-6 h-6 text-yellow-500 flex-shrink-0 mt-1" />
                   <div>
                     <p className="font-semibold text-slate-900">対応時間</p>
@@ -115,7 +185,7 @@ export default function Home() {
 
           <div className="grid md:grid-cols-2 gap-8 mb-12">
             {/* 社会保険労務士 */}
-            <Card className="border-2 border-blue-900 hover:shadow-lg transition">
+            <Card className="border-2 border-blue-900 hover:shadow-xl transition-all transform hover:scale-105">
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div>
@@ -142,7 +212,7 @@ export default function Home() {
             </Card>
 
             {/* ファイナンシャルプランナー */}
-            <Card className="border-2 border-blue-900 hover:shadow-lg transition">
+            <Card className="border-2 border-blue-900 hover:shadow-xl transition-all transform hover:scale-105">
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div>
@@ -170,7 +240,7 @@ export default function Home() {
           </div>
 
           {/* 職務経歴 */}
-          <div className="bg-blue-50 rounded-lg p-8 md:p-12">
+          <div className="bg-blue-50 rounded-lg p-8 md:p-12 hover:bg-blue-100 transition">
             <h3 className="text-2xl font-bold text-blue-900 mb-6">職務経歴</h3>
             <div className="space-y-6">
               <div className="border-l-4 border-yellow-500 pl-6">
@@ -208,14 +278,14 @@ export default function Home() {
                 { name: "コンサルティング", level: 4, desc: "企業向けコンサルティング、個人相談対応" },
                 { name: "資料作成", level: 4, desc: "PowerPoint、Word、提案書作成" },
               ].map((skill) => (
-                <div key={skill.name} className="bg-white p-6 rounded-lg border border-slate-200">
+                <div key={skill.name} className="bg-white p-6 rounded-lg border border-slate-200 hover:shadow-lg transition">
                   <div className="flex justify-between items-center mb-2">
                     <p className="font-semibold text-slate-900">{skill.name}</p>
                     <div className="flex gap-1">
                       {[...Array(5)].map((_, i) => (
                         <Star
                           key={i}
-                          className={`w-4 h-4 ${i < skill.level ? "fill-yellow-500 text-yellow-500" : "text-slate-300"}`}
+                          className={`w-4 h-4 transition-all ${i < skill.level ? "fill-yellow-500 text-yellow-500 scale-110" : "text-slate-300"}`}
                         />
                       ))}
                     </div>
@@ -240,6 +310,7 @@ export default function Home() {
             {[
               {
                 title: "記事執筆・ライティング",
+                icon: "/images/icon-writing.png",
                 items: [
                   "社会保障制度に関する記事",
                   "投資・資産運用に関する記事",
@@ -249,6 +320,7 @@ export default function Home() {
               },
               {
                 title: "コンテンツ制作",
+                icon: "/images/icon-content.png",
                 items: [
                   "ブログ記事の企画・執筆",
                   "ニュースレター作成",
@@ -258,6 +330,7 @@ export default function Home() {
               },
               {
                 title: "コンサルティング・相談対応",
+                icon: "/images/icon-consulting.png",
                 items: [
                   "人事労務相談",
                   "資産運用相談",
@@ -267,6 +340,7 @@ export default function Home() {
               },
               {
                 title: "リサーチ・調査",
+                icon: "/images/icon-research.png",
                 items: [
                   "最新情報の調査",
                   "競合分析",
@@ -275,9 +349,12 @@ export default function Home() {
                 ]
               }
             ].map((service) => (
-              <Card key={service.title} className="hover:shadow-lg transition">
+              <Card key={service.title} className="hover:shadow-xl transition-all transform hover:scale-105">
                 <CardHeader>
-                  <CardTitle className="text-blue-900">{service.title}</CardTitle>
+                  <div className="flex items-start gap-4 mb-4">
+                    <img src={service.icon} alt={service.title} className="w-12 h-12" />
+                    <CardTitle className="text-blue-900">{service.title}</CardTitle>
+                  </div>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-3">
@@ -334,7 +411,7 @@ export default function Home() {
                 period: "6ヶ月（継続中）"
               }
             ].map((project, idx) => (
-              <Card key={idx} className="hover:shadow-lg transition">
+              <Card key={idx} className="hover:shadow-xl transition-all">
                 <CardHeader>
                   <div className="flex justify-between items-start">
                     <div>
@@ -362,8 +439,62 @@ export default function Home() {
         </div>
       </section>
 
+      {/* FAQ セクション */}
+      <section id="faq" className="py-20 px-4 bg-slate-50">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-4xl font-bold text-blue-900 mb-4 text-center">よくある質問</h2>
+          <p className="text-center text-slate-600 mb-12">
+            クライアント様からよくいただく質問をまとめました
+          </p>
+
+          <div className="space-y-4">
+            {[
+              {
+                q: "納期はどのくらいですか？",
+                a: "業務内容によって異なりますが、通常1,000字の記事は3～5営業日、コンサルティングは2週間程度です。急ぎの案件もご相談ください。"
+              },
+              {
+                q: "修正対応は可能ですか？",
+                a: "はい、初回納品後の修正は2回まで無料で対応いたします。"
+              },
+              {
+                q: "継続契約は可能ですか？",
+                a: "はい、月額契約も可能です。継続契約割引もございます。"
+              },
+              {
+                q: "秘密保持契約は対応できますか？",
+                a: "はい、対応いたします。事前にご相談ください。"
+              },
+              {
+                q: "クラウドワークス以外での契約は可能ですか？",
+                a: "はい、メールやZoomでの直接契約も可能です。詳細はお問い合わせください。"
+              },
+              {
+                q: "支払い方法は何がありますか？",
+                a: "クラウドワークスの場合は同プラットフォームの支払い方法に従います。直接契約の場合は銀行振込またはPayPalでの支払いに対応しています。"
+              }
+            ].map((item, idx) => (
+              <div key={idx} className="bg-white rounded-lg border border-slate-200 hover:shadow-lg transition">
+                <button
+                  onClick={() => setExpandedFAQ(expandedFAQ === idx ? null : idx)}
+                  className="w-full p-6 flex justify-between items-center hover:bg-slate-50 transition"
+                >
+                  <p className="font-semibold text-slate-900 text-left">{item.q}</p>
+                  <ChevronDown className={`w-5 h-5 text-yellow-500 transition-transform ${expandedFAQ === idx ? "rotate-180" : ""}`} />
+                </button>
+                {expandedFAQ === idx && (
+                  <div className="px-6 pb-6 border-t border-slate-200 text-slate-700">
+                    {item.a}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* 料金表 セクション */}
-      <section className="py-20 px-4 bg-slate-50">
+      <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-4xl font-bold text-blue-900 mb-4 text-center">料金表</h2>
           <p className="text-center text-slate-600 mb-12 max-w-2xl mx-auto">
@@ -371,7 +502,7 @@ export default function Home() {
           </p>
 
           <div className="grid md:grid-cols-2 gap-8">
-            <Card>
+            <Card className="hover:shadow-xl transition">
               <CardHeader>
                 <CardTitle className="text-blue-900">記事執筆・ライティング</CardTitle>
               </CardHeader>
@@ -401,7 +532,7 @@ export default function Home() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="hover:shadow-xl transition">
               <CardHeader>
                 <CardTitle className="text-blue-900">コンサルティング・相談</CardTitle>
               </CardHeader>
@@ -448,7 +579,7 @@ export default function Home() {
           </p>
           
           <div className="grid md:grid-cols-3 gap-8 mb-12">
-            <div className="bg-white/10 rounded-lg p-6 backdrop-blur-sm">
+            <div className="bg-white/10 rounded-lg p-6 backdrop-blur-sm hover:bg-white/20 transition transform hover:scale-105">
               <Mail className="w-12 h-12 mx-auto mb-4" />
               <h3 className="text-xl font-bold mb-2">クラウドワークス</h3>
               <p className="text-blue-100 mb-4">メッセージ機能で対応</p>
@@ -457,7 +588,7 @@ export default function Home() {
               </Button>
             </div>
 
-            <div className="bg-white/10 rounded-lg p-6 backdrop-blur-sm">
+            <div className="bg-white/10 rounded-lg p-6 backdrop-blur-sm hover:bg-white/20 transition transform hover:scale-105">
               <Mail className="w-12 h-12 mx-auto mb-4" />
               <h3 className="text-xl font-bold mb-2">メール</h3>
               <p className="text-blue-100 mb-4">24時間以内に返信</p>
@@ -466,31 +597,13 @@ export default function Home() {
               </Button>
             </div>
 
-            <div className="bg-white/10 rounded-lg p-6 backdrop-blur-sm">
+            <div className="bg-white/10 rounded-lg p-6 backdrop-blur-sm hover:bg-white/20 transition transform hover:scale-105">
               <Phone className="w-12 h-12 mx-auto mb-4" />
               <h3 className="text-xl font-bold mb-2">Zoom相談</h3>
               <p className="text-blue-100 mb-4">事前予約で対応</p>
               <Button variant="outline" className="w-full border-white text-white hover:bg-white/10">
                 予約する
               </Button>
-            </div>
-          </div>
-
-          <div className="bg-white/10 rounded-lg p-8 backdrop-blur-sm max-w-2xl mx-auto">
-            <h3 className="text-2xl font-bold mb-6">よくある質問</h3>
-            <div className="space-y-6 text-left">
-              <div>
-                <p className="font-bold text-yellow-300 mb-2">Q. 納期はどのくらいですか？</p>
-                <p className="text-blue-100">業務内容によって異なりますが、通常1,000字の記事は3～5営業日、コンサルティングは2週間程度です。急ぎの案件もご相談ください。</p>
-              </div>
-              <div>
-                <p className="font-bold text-yellow-300 mb-2">Q. 修正対応は可能ですか？</p>
-                <p className="text-blue-100">はい、初回納品後の修正は2回まで無料で対応いたします。</p>
-              </div>
-              <div>
-                <p className="font-bold text-yellow-300 mb-2">Q. 継続契約は可能ですか？</p>
-                <p className="text-blue-100">はい、月額契約も可能です。継続契約割引もございます。</p>
-              </div>
             </div>
           </div>
         </div>
@@ -539,6 +652,37 @@ export default function Home() {
           </div>
         </div>
       </footer>
+
+      {/* アニメーション CSS */}
+      <style>{`
+        @keyframes fade-in {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes float {
+          0%, 100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-20px);
+          }
+        }
+
+        .animate-fade-in {
+          animation: fade-in 0.8s ease-out;
+        }
+
+        .animate-float {
+          animation: float 3s ease-in-out infinite;
+        }
+      `}</style>
     </div>
   );
 }
